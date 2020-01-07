@@ -1,0 +1,22 @@
+{
+  "name": "server",
+  "version": "0.1.0",
+  "main": "index.js",
+  "repository": "https://github.com/astrohamsters/server",
+  "author": "Eugene Lepeico <03006jeka@gmail.com>",
+	"license": "MIT",
+	"scripts": {
+		"start": "pm2 start index.js --watch"
+	},
+  "dependencies": {
+    "graphql": "^14.5.8",
+    "koa": "^2.11.0",
+    "koa-graphql": "^0.8.0",
+    "koa-mount": "^4.0.0",
+    "mongoose": "^5.8.5"
+  },
+  "devDependencies": {
+    "dotenv": "^8.2.0",
+    "pm2": "^4.2.1"
+  }
+}
