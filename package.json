@@ -4,12 +4,15 @@
   "main": "index.js",
   "repository": "https://github.com/astrohamsters/server",
   "author": "Eugene Lepeico <03006jeka@gmail.com>",
-	"license": "MIT",
-	"scripts": {
-		"start": "pm2 start index.js --watch"
-	},
+  "license": "MIT",
+  "scripts": {
+    "start": "pm2 start index.js --watch"
+  },
   "dependencies": {
+    "apollo-server-koa": "^2.9.15",
+    "bcrypt": "^3.0.7",
     "graphql": "^14.5.8",
+    "jsonwebtoken": "^8.5.1",
     "koa": "^2.11.0",
     "koa-graphql": "^0.8.0",
     "koa-mount": "^4.0.0",

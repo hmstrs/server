@@ -1,22 +1,49 @@
 require('dotenv').config();
 
 const Koa = require('koa');
-const mount = require('koa-mount');
-const graphqlHTTP = require('koa-graphql');
-const schema = require('./graphql/schema');
+const { ApolloServer } = require('apollo-server-koa');
+const jwt = require('jsonwebtoken');
 
-require('./db')();
+const schemas = require('./graphql/schemas');
+const resolvers= require('./graphql/resolvers');
+
+const userModel = require('./mongo/models/UserModel')
+const eventModel = require('./mongo/models/EventModel')
 
 const app = new Koa();
 
-app.use(mount('/graphql', graphqlHTTP({
-  schema: schema,
-  graphiql: true
-})))
+const getUser = async (req) => {
+  const token = req.headers['token'];
 
-app.listen(9000);
+  if (token) {
+    try {
+      return await jwt.verify(token, 'secret' || process.env.JWT);
+    } catch (e) {
+      throw new AuthenticationError('Your session expired. Sign in again.');
+    }
+  }
+};
 
-app.on('error', err => {
-  log.error('server error', err)
+const server = new ApolloServer({
+  typeDefs: schemas,
+  resolvers,
+  context: async ({ req }) => {
+    if (req) {
+      const me = await getUser(req);
+      return {
+        me,
+        models: {
+          userModel,
+          eventModel,
+        },
+      };
+    }
+  },
 });
 
+server.applyMiddleware({ app, path: '/graphql' });
+
+app.listen({ port: 4000 }, () => {
+	require('./mongo/db')();
+  console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`);
+});
