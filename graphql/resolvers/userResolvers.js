@@ -2,6 +2,8 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { AuthenticationError } = require('apollo-server-koa');
 
+// const userModel = require('../../mongo/models/userModel')
+
 module.exports = {
   Query: {
     user: async (parent, { id }, { models: { userModel }, me }, info) => {

@@ -1,16 +1,18 @@
 require('dotenv').config();
 
 const Koa = require('koa');
-const { ApolloServer } = require('apollo-server-koa');
+const cors = require('@koa/cors');
 const jwt = require('jsonwebtoken');
+const { ApolloServer, AuthenticationError } = require('apollo-server-koa');
 
 const schemas = require('./graphql/schemas');
 const resolvers= require('./graphql/resolvers');
 
-const userModel = require('./mongo/models/UserModel')
-const eventModel = require('./mongo/models/EventModel')
+const userModel = require('./mongo/models/userModel');
+const eventModel = require('./mongo/models/eventModel');
 
 const app = new Koa();
+app.use(cors());
 
 const getUser = async (req) => {
   const token = req.headers['token'];
@@ -28,20 +30,22 @@ const server = new ApolloServer({
   typeDefs: schemas,
   resolvers,
   context: async ({ req }) => {
+		let me = {};
     if (req) {
-      const me = await getUser(req);
-      return {
-        me,
-        models: {
-          userModel,
-          eventModel,
-        },
-      };
-    }
+      me = await getUser(req);
+		}
+
+		return {
+			me,
+			models: {
+				userModel,
+				eventModel,
+			},
+		};
   },
 });
 
-server.applyMiddleware({ app, path: '/graphql' });
+server.applyMiddleware({ app });
 
 app.listen({ port: 4000 }, () => {
 	require('./mongo/db')();
