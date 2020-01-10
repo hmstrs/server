@@ -27,7 +27,7 @@ module.exports = {
         throw new AuthenticationError('Invalid credentials');
       }
 
-      const token = jwt.sign({ id: user.id }, 'riddlemethis', { expiresIn: 24 * 10 * 50 });
+      const token = jwt.sign({ id: user.id }, process.env.JWT || 'secret');
 
       return {
         token,
