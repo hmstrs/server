@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { AuthenticationError } = require('apollo-server-koa');
@@ -32,14 +33,14 @@ module.exports = {
         token,
       };
     },
-	},
+  },
 
   Mutation: {
     createUser: async (parent, { name, password }, { models: { userModel } }, info) => {
       const user = await userModel.create({ name, password });
       return user;
     },
-	},
+  },
 
   User: {
     events: async ({ id }, args, { models: { eventModel } }, info) => {

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 const { AuthenticationError } = require('apollo-server-koa');
 
 module.exports = {
@@ -16,7 +17,7 @@ module.exports = {
       const events = await eventModel.find({ owner: me.id }).exec();
       return events;
     },
-	},
+  },
 
   Mutation: {
     createEvent: async (parent, { title, content }, { models: { eventModel }, me }, info) => {
@@ -26,7 +27,7 @@ module.exports = {
       const event = await eventModel.create({ title, content, owner: me.id });
       return event;
     },
-	},
+  },
 
   Event: {
     owner: async ({ owner }, args, { models: { userModel } }, info) => {
