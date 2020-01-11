@@ -13,7 +13,6 @@ const userModel = require('./mongo/models/userModel');
 const eventModel = require('./mongo/models/eventModel');
 
 const app = new Koa();
-const httpServer = http.createServer(app);
 app.use(cors());
 
 const getUser = async req => {
@@ -58,10 +57,19 @@ const server = new ApolloServer({
   }
 });
 
-server.applyMiddleware({ app });
+server.applyMiddleware({
+  app,
+  path: '/graphql',
+  cors: false
+});
+
+const httpServer = http.createServer(app.callback());
+
 server.installSubscriptionHandlers(httpServer);
 
-httpServer.listen({ port: 4000 }, () => {
+httpServer.listen({port: 4000}, (e) => {
+  console.error(e);
+
   require('./mongo/db')();
   console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`);
   console.log(
